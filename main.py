@@ -33,12 +33,7 @@ bot = commands.Bot(command_prefix="+")
 @bot.event
 async def on_command_error(ctx, error):
     origerror = getattr(error, "original", error)
-    if isinstance(origerror, customchecks.NoPermsError):
-        em = discord.Embed(title="Error",
-                           description=f"You do not have sufficient permissions to use the command `{ctx.command}`",
-                           colour=discord.Colour.red())
-        return await ctx.send(embed=em)
-    elif isinstance(origerror, commands.MissingPermissions):
+    if isinstance(origerror, commands.MissingPermissions):
         missingPerms = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in origerror.args[0]]
         description = (f"You do not have sufficient permissions to use the command `{ctx.command}`:\n" +
                        f"Missing permissions: {', '.join(missingPerms)}")
@@ -85,4 +80,4 @@ if __name__ == "__main__":
         logger.warning("Error during cog loading")
     else:
         logger.info("Successfully loaded all cogs")
-    bot.run(os.environ["UBOT"], bot=True, reconnect=True)
+    bot.run(config["token"], bot=True, reconnect=True)
